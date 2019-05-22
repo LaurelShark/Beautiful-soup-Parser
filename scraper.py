@@ -2,12 +2,12 @@ import requests
 import csv
 from bs4 import BeautifulSoup
 
-# numPages = int(input("Enter amount of pages"))
+file_name = str(input("Enter file name"))
 
 try:
 
     data = requests.get(
-        "https://www.london.gov.uk/talk-london/economy-skills-work/what-does-brexit-mean-london")
+        "https://www.london.gov.uk/talk-london/economy-skills-work/what-does-brexit-mean-london?page=3&action")
     soup = BeautifulSoup(data.content, 'html.parser')
     # print(soup.prettify())
 
@@ -28,7 +28,7 @@ try:
 
     data_dict = dict(zip(names, user_comments))
 
-    with open(str(topic_name).replace(u'?', u'') + '.csv', 'w') as file:
+    with open(file_name + '.csv', 'a', encoding='utf-8') as file:
         fieldnames = ['username', 'comment']
         writer = csv.DictWriter(file, fieldnames=fieldnames)
         writer.writeheader()
