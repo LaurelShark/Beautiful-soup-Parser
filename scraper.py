@@ -1,13 +1,14 @@
 import requests
 import csv
+import sys
 from bs4 import BeautifulSoup
 
-file_name = str(input("Enter file name"))
+file_name = str(input("Enter file name: "))
+url = str(sys.argv[0])
 
 try:
 
-    data = requests.get(
-        "https://www.london.gov.uk/talk-london/economy-skills-work/what-does-brexit-mean-london?page=3&action")
+    data = requests.get(url)
     soup = BeautifulSoup(data.content, 'html.parser')
     # print(soup.prettify())
 
