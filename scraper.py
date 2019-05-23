@@ -3,17 +3,14 @@ import csv
 import sys
 from bs4 import BeautifulSoup
 
-file_name = str(input("Enter file name: "))
-url = str(sys.argv[0])
+write_to = str(input("Enter file name: "))
+page_url = str(sys.argv[1])
 
-try:
 
+def get_comments(url, file_name):
     data = requests.get(url)
     soup = BeautifulSoup(data.content, 'html.parser')
     # print(soup.prettify())
-
-    topic_name = soup.find_all("h2")[1].getText()
-
     names = []
     user_comments = []
     for comment_content in soup.find_all("div", class_="comment__content"):
@@ -36,6 +33,21 @@ try:
         for key, value in data_dict.items():
             writer.writerow({'username': key, "comment": value})
 
+    links_list = []
+    for li_pages_list in soup.findAll("li", class_="pager__item"):
+        for a_blocks in li_pages_list.find_all("a"):
+            href = a_blocks.attrs["href"]
+            links_list.append(href)
+
+    return list(dict.fromkeys(links_list))
+
+
+try:
+    urls_array = get_comments(page_url, write_to)
+    if urls_array:
+        for url_ending in urls_array:
+            url = str('https://www.london.gov.uk' + url_ending)
+            get_comments(url, write_to)
 
 
 except ValueError:
